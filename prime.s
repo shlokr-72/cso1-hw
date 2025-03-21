@@ -3,7 +3,7 @@
 ############################################################
 ## CSO1 Spring 2023 - Homework 5 
 ## 
-## Computing ID: YOURID
+## Computing ID: sub5gd
 ## 
 ## You must update your ID above to receive credit.  Note
 ## that this is an individual assignment and you may NOT
@@ -14,15 +14,28 @@
 ##   modulo routine (calculates mod using add/subtract)   ##
 ############################################################
 
-	.globl	modulo
+.globl  modulo
 modulo:
+        cmpq    $0, %rsi         # if y == 0, return 0
+        je      return_zero
 
-	# TO DO: write this function
-	
-	xorq	%rax, %rax
-	retq
+        cmpq    $0, %rdi         # if x == 0, return 0
+        je      return_zero
 
-############################################################
+loop:
+        cmpq    %rsi, %rdi       # if x < y, exit loop
+        jl      done
+        subq    %rsi, %rdi       # x -= y
+        jmp     loop
+
+done:
+        movq    %rdi, %rax       # return x (which is now x % y)
+        retq
+
+return_zero:
+        xorq    %rax, %rax       # return 0
+        retq
+#############################################################
 ##                 end of modulo routine                  ##
 ############################################################
 
@@ -32,14 +45,37 @@ modulo:
 ##            gcd routine (gcd using modulo)              ##
 ############################################################
 
-	.globl	gcd
+
+.globl  gcd
+
 gcd:
+        cmpq    %rdi, %rsi       # if x == y, return y
+        je      return_y
 
-	# TO DO: write this function
+        cmpq    $0, %rsi         # if y == 0, return x
+        je      return_x
 
-	xorq	%rax, %rax
-	retq
+        pushq   %rdi             # Save x
+        pushq   %rsi             # Save y
 
+        call    modulo           # Compute x % y
+
+        popq    %rsi             # Restore y
+        popq    %rdi             # Restore x
+
+        movq    %rsi, %rdi       # New x = old y
+        movq    %rax, %rsi       # New y = old x % y
+
+        call    gcd              # Recursively call gcd
+        retq
+
+return_y:
+        movq    %rsi, %rax
+        retq
+
+return_x:
+        movq    %rdi, %rax
+        retq
 ############################################################
 ##                 end of gcd routine                     ##
 ############################################################
@@ -50,14 +86,36 @@ gcd:
 ##           prime routine (prime using gcd)              ##
 ############################################################
 
-	.globl	prime
+
+        .globl  prime
 prime:
+        cmpq    $2, %rdi         # If n < 2, it's not prime
+        jl      not_prime
 
-	# TO DO: write this function
+        movq    $2, %rdx         # i = 2 (starting divisor)
 
-	xorq	%rax, %rax
-	retq
+check_loop:
+        cmpq    %rdi, %rdx       # If i == n, it's prime
+        jge     is_prime
 
+        movq    %rdx, %rsi       # Set y = i
+        pushq   %rdi             # Save n
+        call    gcd              # gcd(n, i)
+        popq    %rdi             # Restore n
+
+        cmpq    $1, %rax         # If gcd(n, i) != 1, not prime
+        jne     not_prime
+
+        incq    %rdx             # i++
+        jmp     check_loop
+
+not_prime:
+        xorq    %rax, %rax       # Return 0 (not prime)
+        retq
+
+is_prime:
+        movq    $1, %rax         # Return 1 (prime)
+        retq
 ############################################################
 ##                end of prime routine                    ##
 ############################################################
