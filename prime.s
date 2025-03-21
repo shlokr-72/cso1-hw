@@ -16,20 +16,20 @@
 
 .globl  modulo
 modulo:
-        cmpq    $0, %rsi         # if y == 0, return 0
+        cmpq    $0, %rsi         # if y equals 0, return 0
         je      return_zero
 
-        cmpq    $0, %rdi         # if x == 0, return 0
+        cmpq    $0, %rdi         # if x equals 0, return 0
         je      return_zero
 
 loop:
-        cmpq    %rsi, %rdi       # if x < y, exit loop
+        cmpq    %rsi, %rdi       # if x is less than  y, exit loop
         jl      done
         subq    %rsi, %rdi       # x -= y
         jmp     loop
 
 done:
-        movq    %rdi, %rax       # return x (which is now x % y)
+        movq    %rdi, %rax       # return x
         retq
 
 return_zero:
@@ -49,10 +49,10 @@ return_zero:
 .globl  gcd
 
 gcd:
-        cmpq    %rdi, %rsi       # if x == y, return y
+        cmpq    %rdi, %rsi       # if x equals y, return y
         je      return_y
 
-        cmpq    $0, %rsi         # if y == 0, return x
+        cmpq    $0, %rsi         # if y equals 0, return x
         je      return_x
 
         pushq   %rdi             # Save x
@@ -89,13 +89,13 @@ return_x:
 
         .globl  prime
 prime:
-        cmpq    $2, %rdi         # If n < 2, it's not prime
+        cmpq    $2, %rdi         # If n is less than 2, it's not prime
         jl      not_prime
 
-        movq    $2, %rdx         # i = 2 (starting divisor)
+        movq    $2, %rdx         # Set i = 2 (starting divisor)
 
 check_loop:
-        cmpq    %rdi, %rdx       # If i == n, it's prime
+        cmpq    %rdi, %rdx       # If i equals n, it's prime
         jge     is_prime
 
         movq    %rdx, %rsi       # Set y = i
@@ -106,7 +106,7 @@ check_loop:
         cmpq    $1, %rax         # If gcd(n, i) != 1, not prime
         jne     not_prime
 
-        incq    %rdx             # i++
+        incq    %rdx             # increment i
         jmp     check_loop
 
 not_prime:
