@@ -5,6 +5,9 @@
  */
 
 //TODO: Remember to add include statement here. 
+#include <stdio.h>
+#include <stdlib.h>
+#include "linkedlist.h"
 
 cll_node *cll_head(cll_node *list){
     cll_node *ptr = list;
