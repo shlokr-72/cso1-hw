@@ -43,7 +43,7 @@ char shufflePointers(void **ptrs, size_t n) {
     for (size_t i = 0; i < n-1; i++) {
         size_t randomNumber = (size_t) rand();
         size_t randomIndex = i + (randomNumber / (RAND_MAX / (n - i) + 1));
-        
+
         void *tmp = ptrs[randomIndex];
         ptrs[randomIndex] = ptrs[i];
         ptrs[i] = tmp;
@@ -65,7 +65,7 @@ void shuffleQuestions(int numQuestions) {
     for (size_t i = 0; i < numQuestions-1; i++) {
         size_t randomNumber = (size_t) rand();
         size_t randomIndex = i + (randomNumber / (RAND_MAX / (numQuestions - i) + 1));
-        
+
         questionData tmp;
         memcpy(&tmp, &questions[i], questionSize);
         memcpy(&questions[i], &questions[randomIndex], questionSize);
@@ -120,7 +120,7 @@ int main() {
     int numQuestions = 30;
     char category[20];
     int gameLength = 0;
-   
+
     puts("Hello and welcome to CSO1 Lab 12 Trivia!");
     puts("We should have developed this better, but now it's up to you to fix our memory errors!");
     puts("");
@@ -146,7 +146,7 @@ int main() {
     shuffleQuestions(numQuestions);
 
     puts("How many questions would you like to answer?:");
-   
+
     char buffer[10];
     fgets(buffer, 10, stdin);
     sscanf(buffer, "%d", &gameLength);
@@ -155,7 +155,7 @@ int main() {
     int correct = 0;
     for (int i = 0; i < gameLength; i++) {
         printf("Question %d: %s\n", (i + 1), questions[i].text);
-        
+
         for (int j = 0; j < 4; j++) {
             printf("  %c. %s\n", (char) (0x41 + j), questions[i].answers[j]);
         }
@@ -182,3 +182,4 @@ int main() {
 
     return 0;
 }
+
